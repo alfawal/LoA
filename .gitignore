@@ -1,0 +1,6 @@
+# Virtual environment
+/venv
+*/__pycache__
+
+# Personal python playfield files :)
+*.playfield.py
