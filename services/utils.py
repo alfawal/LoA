@@ -37,7 +37,7 @@ class BaseAPIService:
     session: requests.sessions.Session = field(
         repr=False, default_factory=requests.session
     )
-    headers: dict = field(
+    headers: dict[str, str] = field(
         default_factory=lambda: {
             "User-Agent": "Mozilla/5.0 (Windows NT 5.2; en-US; rv:1.9.0.20) Gecko/20140108 Firefox/37.0",
             "content-type": "application/json",
@@ -59,7 +59,7 @@ class BaseAPIService:
         },
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.__class__.__name__} - {self.__dict__}"
 
     def __len__(self) -> int:
@@ -69,7 +69,7 @@ class BaseAPIService:
         return item in self.champions_data["ChampionId"]
 
     @property
-    def champions_names(self) -> dict:
+    def champions_names(self) -> dict[str, str]:
         try:
             if not os.path.exists("assets/champions_names_by_id.json"):
                 print("Champions names file not found, updating...")

@@ -12,7 +12,13 @@
 
 ## Description
 
-CLI tool to scape League of Legends champions analyzed stats from OP.GG <!--, U.GG-->and BLITZ.GG into XLSX, CSV or TXT files and to visualize the gathered data.
+LoA: League of Archive is a CLI tool to scape League of Legends champions analyzed stats from OP.GG <!--, U.GG-->and BLITZ.GG into XLSX, CSV, JSON or TXT files and to visualize the gathered data.
+
+## Usage
+
+```bash
+python3 project.py --help
+```
 
 ## Structure
 
