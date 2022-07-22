@@ -1,5 +1,9 @@
 # LoA: League of Archive
 
+## Description
+
+LoA: League of Archive is a CLI tool to scape League of Legends champions analyzed stats from OP.GG <!--, U.GG-->and BLITZ.GG into XLSX, CSV, JSON or TXT files and to visualize the gathered data.
+
 ## Video Demo
 
 <div style="text-align: center">
@@ -7,12 +11,8 @@
     <img src="https://img.shields.io/badge/YOUTUBE-WATCH%20NOW-red?logo=YOUTUBE&logoColor=red&style=for-the-badge" />
 </a>
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/lDFCNSey9RI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/lDFCNSey9RI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
 </div>
-
-## Description
-
-LoA: League of Archive is a CLI tool to scape League of Legends champions analyzed stats from OP.GG <!--, U.GG-->and BLITZ.GG into XLSX, CSV, JSON or TXT files and to visualize the gathered data.
 
 ## Usage
 
@@ -51,7 +51,9 @@ python3 project.py --help
      - `wins: int` - Source: Provider's response.
      - `Losses: int` - Source: Provider's response.
      - `Winrate: str | float` - Source: Formula (rounded to 2 decimal places):
+
        $$ Winrate \space percentage = {Wins \over Total \space games} \times 100 $$
+
      - `Provider: str` - Source: The data fetch source.
 
 ## Resources
