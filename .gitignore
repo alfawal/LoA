@@ -2,5 +2,11 @@
 /venv
 */__pycache__
 
+# Json assets
+*.json
+
+# Results directories
+/results*
+
 # Personal python playfield files :)
 *.playfield.py

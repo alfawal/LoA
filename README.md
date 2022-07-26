@@ -2,7 +2,7 @@
 
 ## Description
 
-LoA: League of Archive is a CLI tool to scape League of Legends champions analyzed stats from OP.GG <!--, U.GG-->and BLITZ.GG into XLSX, CSV, JSON or TXT files and to visualize the gathered data.
+LoA: League of Archive is a CLI tool to scape League of Legends champions analyzed stats from OP.GG <!--, U.GG-->and BLITZ.GG into XLSX, CSV, JSON or TXT files and to visualize the gathered data and export it as PNG.
 
 ## Video Demo
 
@@ -14,10 +14,32 @@ LoA: League of Archive is a CLI tool to scape League of Legends champions analyz
 <!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/lDFCNSey9RI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
 </div>
 
+## Requirements
+
+- Python 3.10 - https://www.python.org/downloads/release/python-3105/
+- Packages, run: `pip3 install -r ./requirements.txt`
+
 ## Usage
 
-```bash
-python3 project.py --help
+```shell
+$ python3 project.py --help
+```
+
+```
+usage: project.py [-h] [-t TYPE] [--plot | --no-plot] [-v] provider
+
+LoA: League of Archive - Scrape, export and visualize data from OP.GG and Blitz.GG
+
+positional arguments:
+  provider              data provider to use, options: {op.gg, blitz.gg}
+
+options:
+  -h, --help            show this help message and exit
+  -t TYPE, --type TYPE  data exporting type, options: {xlsx, csv, json, txt}, default: xlsx
+  --plot, --no-plot     visualize the data and export it as png
+  -v, --version         show program's version number and exit
+
+Results will be exported under ./results
 ```
 
 ## Structure
@@ -56,6 +78,16 @@ python3 project.py --help
 
      - `Provider: str` - Source: The data fetch source.
 
+## Todo
+
+- [x] Add OP.GG
+- [x] Add Blitz.GG
+- [x] Add args parser
+- [x] Add data exporting
+- [x] Add data visualization
+- [ ] Add U.GG scraping via Selenium
+- [ ] Add more data providers like [mobalytics.gg](https://mobalytics.gg), [metasrc.com](https://metasrc.com), [lolalytics.com](https://lolalytics.com) and [lolvvv.com](https://lolvvv.com) etc.
+
 ## Resources
 
 - Data:
@@ -64,17 +96,16 @@ python3 project.py --help
 
     - [Data Dragon 12.13.1 CDN](https://ddragon.leagueoflegends.com/cdn/12.13.1/data/en_US/champion.json "Data Dragon - champion")
 
-  - Champions winrate:
+  - Champions winrates:
 
     - [OP.GG - Stats](https://www.op.gg/statistics/champions)
     <!-- - [U.GG - Tier List](https://u.gg/lol/tier-list) -->
     - [BLITZ.GG - Tier List](https://blitz.gg/lol/tierlist)
 
-  - Latest patch:
-    - [BLITZ.GG](https://blitz.gg/)
-
 - Other:
 
+  - Latest patch:
+    - [BLITZ.GG](https://blitz.gg/)
   - Icons:
 
     - Lanes:
@@ -95,6 +126,6 @@ python3 project.py --help
 
 ## Disclaimer
 
-**This project is for educational purposes only and does not encourage any data usage without permission from its owner.**
+**This project was made for educational purposes (CS50P) and does not encourage any data usage without permission from its owner.**
 
 <!-- **I do not own the used data. All credits go to its rightful owner.** -->

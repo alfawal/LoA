@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 
 import requests
+from colorama import Fore
 
-from .utils import BaseAPIService, ChampionsData, Providers, fetch_links
+from .utils import BaseAPIService, ChampionsData, Providers
 
 
 @dataclass(kw_only=True, slots=True)
@@ -15,12 +16,21 @@ class OPGG(BaseAPIService):
         }
 
         response: requests.models.Response = self.session.get(
-            fetch_links[Providers.OP_GG], headers=self.headers, params=self.params
+            Providers.fetch_links[Providers.OP_GG],
+            headers=self.headers,
+            params=self.params,
+        )
+
+        print(
+            f"\t\N{black question mark ornament}{Fore.LIGHTCYAN_EX} Checking for the response validation..."
         )
         if not response:
             raise requests.HTTPError(f"Could not fetch the data from {Providers.OP_GG}")
 
         self.response_data = response.json()
+        print(
+            f"\t\t{Fore.LIGHTGREEN_EX}\N{check mark} Response code and data are valid!"
+        )
         return self.response_data
 
     def _sanitize_data(self):
@@ -37,14 +47,18 @@ class OPGG(BaseAPIService):
             self.champions_data["Losses"].append(champion["play"] - champion["win"])
             self.champions_data["Winrate"].append(
                 self.calculate_winrate_percentage(
-                    str, champion["win"], champion["play"]
+                    float, champion["win"], champion["play"]
                 )
             )
 
         self.complete_missing_champions_data()
 
     def get_stats(self) -> ChampionsData:
+        print(f"\N{telephone receiver} Calling the {Providers.OP_GG} API...")
         self._api_call()
+        # print(f"{Fore.LIGHTGREEN_EX} Done!")
+
+        print(f"\N{lotion bottle} Sanitizing the received data...")
         self._sanitize_data()
 
         return self.champions_data

@@ -13,12 +13,11 @@ class Providers:
     # U_GG = "U.GG"
     BLITZ_GG = "BLITZ.GG"
 
-
-fetch_links: dict = {
-    Providers.OP_GG: "https://www.op.gg/api/statistics/global/champions/ranked",
-    # Providers.U_GG: "",
-    Providers.BLITZ_GG: "https://league-champion-aggregate.iesdev.com/graphql",
-}
+    fetch_links: dict[str, str] = {
+        OP_GG: "https://www.op.gg/api/statistics/global/champions/ranked",
+        # U_GG: "",
+        BLITZ_GG: "https://league-champion-aggregate.iesdev.com/graphql",
+    }
 
 
 class ChampionsData(TypedDict):
@@ -29,7 +28,7 @@ class ChampionsData(TypedDict):
     Wins: list[int]
     Losses: list[int]
     Winrate: list[str | float]
-    Provider: list[Providers]
+    Provider: list[Providers] | Providers
 
 
 @dataclass(slots=True)
@@ -45,6 +44,7 @@ class BaseAPIService:
     )
     params: dict = field(default_factory=dict)
     response_data: dict = field(repr=False, default_factory=dict)
+    champions_names: dict[str, str] = field(default_factory=dict)
     champions_data: ChampionsData = field(
         repr=False,
         default_factory=lambda: {
@@ -59,6 +59,10 @@ class BaseAPIService:
         },
     )
 
+    def __post_init__(self) -> None:
+        print(f"\N{atom symbol} {Fore.LIGHTBLUE_EX}{self.__class__.__name__}")
+        self.set_champions_names()
+
     def __str__(self) -> str:
         return f"{self.__class__.__name__} - {self.__dict__}"
 
@@ -68,20 +72,18 @@ class BaseAPIService:
     def __contains__(self, item: int) -> bool:
         return item in self.champions_data["ChampionId"]
 
-    @property
-    def champions_names(self) -> dict[str, str]:
+    def set_champions_names(self) -> dict[str, str]:
         try:
             if not os.path.exists("assets/champions_names_by_id.json"):
-                print("Champions names file not found, updating...")
                 self.update_champions_assets()
             with open("assets/champions_names_by_id.json") as f:
                 data = json.load(f)
         except FileNotFoundError as e:
-            raise Exception(
+            raise FileNotFoundError(
                 "Something went wrong while trying to load the champions names."
             ) from e
 
-        return data
+        self.champions_names = data
 
     def calculate_winrate_percentage(
         self, format_type: type, wins: int, games: int, loses: int = 0
@@ -93,6 +95,9 @@ class BaseAPIService:
         return f"{percentage}%" if format_type == str else percentage
 
     def complete_missing_champions_data(self) -> None:
+        print(
+            f"{Fore.LIGHTCYAN_EX}\t\N{black question mark ornament} Checking for missing champions."
+        )
         missing_champs = []
 
         for champion_id, champion_name in self.champions_names.items():
@@ -109,23 +114,48 @@ class BaseAPIService:
                 self.champions_data["Winrate"].append("0%")
                 missing_champs.append(champion_name)
 
+        assert len(self.champions_data["ChampionId"]) >= len(
+            self.champions_names
+        ), f"Champions IDs must be equal or greater than {len(self.champions_names)}"
+        assert len(self.champions_data["ChampionName"]) >= len(
+            self.champions_names
+        ), f"Champions names must be equal or greater than {len(self.champions_names)}"
+
+        assert (
+            len(self.champions_data["ChampionId"])
+            == len(self.champions_data["ChampionName"])
+            == len(self.champions_data["TotalGames"])
+            == len(self.champions_data["Wins"])
+            == len(self.champions_data["Losses"])
+            == len(self.champions_data["Winrate"])
+        ), "Champions data length doesn't match"
+
         if missing_champs:
             p = inflect.engine()
             print(
-                f"{Fore.LIGHTCYAN_EX}Added {len(missing_champs)} missing champions: {p.join(missing_champs)}"
+                f"{Fore.LIGHTCYAN_EX}\t\t\N{information source} Added {len(missing_champs)} missing champions: {p.join(missing_champs, final_sep='')}"
             )
         else:
-            print(f"{Fore.LIGHTCYAN_EX}No missing champions found.")
+            print(
+                f"{Fore.LIGHTGREEN_EX}\t\t\N{check mark} No missing champions were found."
+            )
 
     def update_champions_assets(self, patch: str = None) -> None:
         try:
             if not patch:
+                print(
+                    f"{Fore.LIGHTBLUE_EX}\t\N{information source} No patch specified."
+                )
+                print(
+                    f"{Fore.LIGHTYELLOW_EX}\t\t\N{telephone receiver} Calling for the latest patch..."
+                )
                 patch_res: requests.Response = self.session.get(
                     "https://utils.iesdev.com/static/json/lol/riot/versions",
                     headers=self.headers,
                 )
                 patch: str = patch_res.json()[0]
 
+            print(f"{Fore.LIGHTGREEN_EX}\t\t\t\N{check mark} Using patch {patch}")
             response: requests.Response = self.session.get(
                 f"https://ddragon.leagueoflegends.com/cdn/{patch}/data/en_US/champion.json"
             )
@@ -136,6 +166,13 @@ class BaseAPIService:
                 )
 
             res_data: dict = response.json()
+            assert (
+                "data" in res_data
+            ), "Couldn't fetch the champions data from Data Dragon, make sure that the provided patch is valid."
+
+            print(
+                f"{Fore.LIGHTYELLOW_EX}\t\N{hourglass} Writing champions data to champions.json"
+            )
             with open("assets/champions.json", "w") as f:
                 json.dump(res_data, f)
 
@@ -146,8 +183,14 @@ class BaseAPIService:
             assert len(res_data["data"].keys()) == len(
                 champs_names_by_id.keys()
             ), f"{Fore.RED}Keys are not equal"
-
+            print(
+                f"{Fore.LIGHTYELLOW_EX}\t\N{hourglass} Writing mapped data to champions_names_by_id.json"
+            )
             with open("assets/champions_names_by_id.json", "w") as f:
                 json.dump(champs_names_by_id, f)
+
+            print(
+                f"{Fore.LIGHTGREEN_EX}\t\N{check mark} Updated champions assets successfully."
+            )
         except Exception as e:
             raise Exception("Could not update the champions assets:", e) from e
