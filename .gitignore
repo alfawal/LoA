@@ -12,5 +12,11 @@ __pycache__
 # Results directories
 /results*
 
+# Json assets
+*.json
+
+# Results directories
+/results*
+
 # Personal python playfield files :)
 *.playfield.py
