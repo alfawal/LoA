@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import requests
 
-from .utils import BaseAPIService, ChampionsData, Providers, fetch_links
+from .utils import BaseAPIService, ChampionsData, Providers
 
 
 @dataclass(kw_only=True, slots=True)
@@ -11,7 +11,9 @@ class Blitz(BaseAPIService):
         self.params = "query=query%20TierList%28%24region%3ARegion%2C%24queue%3AQueue%2C%24tier%3ATier%29%7BallChampionStats%28region%3A%24region%2Cqueue%3A%24queue%2Ctier%3A%24tier%2CmostPopular%3Atrue%29%7BchampionId%20role%20patch%20wins%20games%20tierListTier%7BtierRank%20previousTierRank%20status%7D%7D%7D&variables=%7B%22queue%22%3A%22RANKED_SOLO_5X5%22%2C%22region%22%3A%22WORLD%22%2C%22tier%22%3A%22PLATINUM_PLUS%22%7D"
 
         response: requests.models.Response = self.session.get(
-            fetch_links[Providers.BLITZ_GG], headers=self.headers, params=self.params
+            Providers.fetch_links[Providers.BLITZ_GG],
+            headers=self.headers,
+            params=self.params,
         )
         if not response:
             raise requests.HTTPError(
@@ -38,7 +40,7 @@ class Blitz(BaseAPIService):
             self.champions_data["Losses"].append(champion["games"] - champion["wins"])
             self.champions_data["Winrate"].append(
                 self.calculate_winrate_percentage(
-                    str, champion["wins"], champion["games"]
+                    float, champion["wins"], champion["games"]
                 )
             )
 
