@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 import requests
 from colorama import Fore
+
 from .utils import BaseAPIService, ChampionsData, Providers
 
 

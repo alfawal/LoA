@@ -3,11 +3,11 @@ import os
 from datetime import datetime
 
 import pandas as pd
-from colorama import init, Fore
+from colorama import Fore, init
 from matplotlib.pyplot import savefig
 from UliPlot.XLSX import auto_adjust_xlsx_column_width
 
-from services import __app_name__, __app_description__, __version__, __repo_url__
+from services import __app_description__, __app_name__, __repo_url__, __version__
 from services.blitzgg import Blitz
 from services.opgg import OPGG
 
