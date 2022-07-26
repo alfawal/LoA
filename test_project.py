@@ -1,9 +1,11 @@
-import pytest
-from project import get_args, get_data_as_dataframe, export_to, plot_data
 import argparse
-import pandas as pd
 import os
 from datetime import datetime
+
+import pandas as pd
+import pytest
+
+from project import export_to, get_args, get_data_as_dataframe, plot_data
 
 
 def test_get_args():
