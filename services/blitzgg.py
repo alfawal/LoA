@@ -44,7 +44,7 @@ class Blitz(BaseAPIService):
                 )
             )
 
-        self.complete_missing_champions_data()
+        self.complete_missing_champions_data(float)
 
     def get_stats(self) -> ChampionsData:
         self._api_call()

@@ -94,7 +94,7 @@ class BaseAPIService:
 
         return f"{percentage}%" if format_type == str else percentage
 
-    def complete_missing_champions_data(self) -> None:
+    def complete_missing_champions_data(self, winrate_type: type) -> None:
         print(
             f"{Fore.LIGHTCYAN_EX}\t\N{black question mark ornament} Checking for missing champions."
         )
@@ -111,7 +111,9 @@ class BaseAPIService:
                 self.champions_data["TotalGames"].append(0)
                 self.champions_data["Wins"].append(0)
                 self.champions_data["Losses"].append(0)
-                self.champions_data["Winrate"].append("0%")
+                self.champions_data["Winrate"].append(
+                    "0%" if winrate_type == str else 0.0
+                )
                 missing_champs.append(champion_name)
 
         assert len(self.champions_data["ChampionId"]) >= len(
