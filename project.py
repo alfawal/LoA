@@ -12,7 +12,7 @@ from services.blitzgg import Blitz
 from services.opgg import OPGG
 
 
-def get_args() -> argparse.Namespace:
+def get_args(args=None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=f"{Fore.LIGHTCYAN_EX}{__app_description__}{Fore.LIGHTMAGENTA_EX}",
         epilog=f"{Fore.LIGHTYELLOW_EX}Results will be exported under ./results{Fore.RESET}",
@@ -49,11 +49,20 @@ def get_args() -> argparse.Namespace:
         0
     ].help = f"{Fore.LIGHTBLUE_EX}Show this help message and exit{Fore.RESET}"
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
+
     if args.provider not in ["op.gg", "blitz.gg"]:
         raise argparse.ArgumentError(
             provider_arg,
             f'Invalid provider: "{args.provider}", options: {{op.gg, blitz.gg}}',
+        )
+    if not args.type and not args.plot:
+        raise SystemExit(
+            (
+                f"\N{information source} {Fore.LIGHTCYAN_EX}Please specify an export type or plot flag."
+                + f"\n{Fore.LIGHTYELLOW_EX}For more information run the program with -h/--help flag"
+                + f"\nor visit the repository: {__repo_url__}"
+            )
         )
     if args.type is not None and args.type not in ["xlsx", "csv", "json", "txt"]:
         raise argparse.ArgumentError(
@@ -103,7 +112,7 @@ def export_to(
         case _:
             raise ValueError(f"Invalid type: {export_type}")
 
-    return f"\N{bar chart} {Fore.LIGHTGREEN_EX}Exported successfully as {export_type.upper()} to: ./{file_path}"
+    return file_path
 
 
 def plot_data(dataframe: pd.DataFrame, date_time: str, path: str) -> str:
@@ -113,7 +122,7 @@ def plot_data(dataframe: pd.DataFrame, date_time: str, path: str) -> str:
     dataframe["Winrate"].plot(kind="barh", figsize=(10, 75))
     savefig(plot_path)
 
-    return f"\N{artist palette} {Fore.LIGHTGREEN_EX}Plotted successfully as PNG to: ./{plot_path}"
+    return plot_path
 
 
 def main():
@@ -121,13 +130,6 @@ def main():
     date_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     args = get_args()
-
-    if not args.type and not args.plot:
-        exit(
-            f"\N{information source} {Fore.LIGHTCYAN_EX}Please specify an export type or plot flag."
-            f"\n{Fore.LIGHTYELLOW_EX}For more information run the program with -h/--help flag"
-            f"\nor visit the repository: {__repo_url__}"
-        )
 
     data = get_data_as_dataframe(args.provider)
 
@@ -139,12 +141,16 @@ def main():
         os.makedirs(f"{path}/plots")
 
     if args.type:
-        export = export_to(data, date_time, args.type, path)
-        print(export)
+        export_path = export_to(data, date_time, args.type, path)
+        print(
+            f"\N{bar chart} {Fore.LIGHTGREEN_EX}Exported successfully as {args.type.upper()} to: ./{export_path}"
+        )
 
     if args.plot:
-        plot = plot_data(data, date_time, path)
-        print(plot)
+        plot_path = plot_data(data, date_time, path)
+        print(
+            f"\N{artist palette} {Fore.LIGHTGREEN_EX}Plotted successfully as PNG to: ./{plot_path}"
+        )
 
 
 if __name__ == "__main__":

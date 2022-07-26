@@ -1,6 +1,16 @@
 # Virtual environment
 /venv
-*/__pycache__
+
+__pycache__
+
+# pytest
+.pytest_cache
+
+# Json assets
+*.json
+
+# Results directories
+/results*
 
 # Json assets
 *.json
