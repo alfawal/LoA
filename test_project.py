@@ -48,7 +48,7 @@ def test_get_args():
     with pytest.raises(SystemExit) as test6:
         get_args(test6_args)
     assert test6.type == SystemExit
-    assert "Please specify an export type or plot flag." in str(test6.value)
+    assert "Please specify an export type, plot or stream flag." in str(test6.value)
     assert "For more information run the program with -h/--help flag" in str(
         test6.value
     )
@@ -58,7 +58,7 @@ def test_get_args():
     with pytest.raises(SystemExit) as test7:
         get_args(test7_args)
     assert test7.type == SystemExit
-    assert "Please specify an export type or plot flag." in str(test7.value)
+    assert "Please specify an export type, plot or stream flag." in str(test7.value)
     assert "For more information run the program with -h/--help flag" in str(
         test7.value
     )
@@ -214,7 +214,7 @@ def test_plot_data():
     assert os.path.splitext(test1)[1][1:] == file_type
 
     # blitz.gg plot
-    provider = "op.gg"
+    provider = "blitz.gg"
     dataframe = get_data_as_dataframe(provider)
     date_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     path = f"test_results/{provider}"

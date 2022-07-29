@@ -1,9 +1,12 @@
 import argparse
+import logging
 import os
 from datetime import datetime
 
+import flask.cli as flask_cli
 import pandas as pd
 from colorama import Fore, init
+from flask import Flask, render_template
 from matplotlib.pyplot import savefig
 from UliPlot.XLSX import auto_adjust_xlsx_column_width
 
@@ -39,6 +42,11 @@ def get_args(args=None) -> argparse.Namespace:
         help=f"{Fore.LIGHTBLUE_EX}Visualize the data and export it as png{Fore.RESET}",
     )
     parser.add_argument(
+        "--stream",
+        action=argparse.BooleanOptionalAction,
+        help=f"{Fore.LIGHTBLUE_EX}Stream the data to a webpage{Fore.RESET}",
+    )
+    parser.add_argument(
         "-v",
         "--version",
         action="version",
@@ -56,10 +64,10 @@ def get_args(args=None) -> argparse.Namespace:
             provider_arg,
             f'Invalid provider: "{args.provider}", options: {{op.gg, blitz.gg}}',
         )
-    if not args.type and not args.plot:
+    if not any((args.type, args.plot, args.stream)):
         raise SystemExit(
             (
-                f"\N{information source} {Fore.LIGHTCYAN_EX}Please specify an export type or plot flag."
+                f"\N{information source} {Fore.LIGHTCYAN_EX}Please specify an export type, plot or stream flag."
                 + f"\n{Fore.LIGHTYELLOW_EX}For more information run the program with -h/--help flag"
                 + f"\nor visit the repository: {__repo_url__}"
             )
@@ -125,6 +133,22 @@ def plot_data(dataframe: pd.DataFrame, date_time: str, path: str) -> str:
     return plot_path
 
 
+def stream_data(dataframe: pd.DataFrame) -> str:
+    app = Flask(__name__)
+    flask_cli.show_server_banner = lambda *args: None
+    log = logging.getLogger("werkzeug")
+    log.setLevel(logging.ERROR)
+
+    @app.route("/", methods=["GET"])
+    def render_table():
+        return dataframe.to_html(classes="data", header=True)
+
+    print(
+        f"\N{satellite antenna} {Fore.LIGHTGREEN_EX}Data streaming server started: http://localhost:1010/"
+    )
+    app.run(host="localhost", port=1010, debug=False, use_reloader=False)
+
+
 def main():
     init(autoreset=True)
     date_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -153,6 +177,9 @@ def main():
         print(
             f"\N{artist palette} {Fore.LIGHTGREEN_EX}Plotted successfully as PNG to: ./{plot_path}"
         )
+
+    if args.stream:
+        stream_data(data)
 
 
 if __name__ == "__main__":
