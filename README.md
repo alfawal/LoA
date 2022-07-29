@@ -1,16 +1,14 @@
-# LoA: League of Archive
+# LoA: League of Archives
 
 ## Description
 
-LoA: League of Archive is a CLI tool to scape League of Legends champions analyzed stats from OP.GG <!--, U.GG-->and BLITZ.GG into XLSX, CSV, JSON or TXT files and to visualize the gathered data and export it as PNG.
+LoA: League of Archives is a CLI tool to scape analyzed League of Legends champions stats from OP.GG <!--, U.GG-->and BLITZ.GG into XLSX, CSV, JSON or TXT files, visualize the gathered data as a PNG plot and stream the data into a localhost html table and json.
 
 ## Video Demo
 
-<div style="text-align: center">
 <a href="https://www.youtube.com/watch?v=">
     <img src="https://img.shields.io/badge/YOUTUBE-WATCH%20NOW-red?logo=YOUTUBE&logoColor=red&style=for-the-badge" />
 </a>
-</div>
 
 ## Requirements
 
@@ -24,9 +22,9 @@ python3 project.py --help
 ```
 
 ```
-usage: project.py [-h] [-t TYPE] [--plot | --no-plot] [-v] provider
+usage: project.py [-h] [-t TYPE] [--plot | --no-plot] [--stream | --no-stream] [-v] provider
 
-LoA: League of Archive - Scrape, export and visualize data from OP.GG and Blitz.GG
+LoA: League of Archives - Scrape, export, visualize and stream data from OP.GG and Blitz.GG
 
 Positional arguments:
   provider              Data provider to use, options: {op.gg, blitz.gg}
@@ -35,6 +33,8 @@ Optional arguments:
   -h, --help            Show this help message and exit
   -t TYPE, --type TYPE  Data exporting type, options: {xlsx, csv, json, txt}
   --plot, --no-plot     Visualize the data and export it as png
+  --stream, --no-stream
+                        Stream the data into html table and json response
   -v, --version         Show program's version number and exit
 
 Results will be exported under ./results

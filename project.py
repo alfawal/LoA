@@ -6,7 +6,7 @@ from datetime import datetime
 import flask.cli as flask_cli
 import pandas as pd
 from colorama import Fore, init
-from flask import Flask, render_template
+from flask import Flask
 from matplotlib.pyplot import savefig
 from UliPlot.XLSX import auto_adjust_xlsx_column_width
 
@@ -44,7 +44,7 @@ def get_args(args=None) -> argparse.Namespace:
     parser.add_argument(
         "--stream",
         action=argparse.BooleanOptionalAction,
-        help=f"{Fore.LIGHTBLUE_EX}Stream the data to a webpage{Fore.RESET}",
+        help=f"{Fore.LIGHTBLUE_EX}Stream the data into html table and json response{Fore.RESET}",
     )
     parser.add_argument(
         "-v",
@@ -133,20 +133,33 @@ def plot_data(dataframe: pd.DataFrame, date_time: str, path: str) -> str:
     return plot_path
 
 
-def stream_data(dataframe: pd.DataFrame) -> str:
+def stream_data(
+    dataframe: pd.DataFrame, host: str = "localhost", port: int = 1010
+) -> None:
     app = Flask(__name__)
     flask_cli.show_server_banner = lambda *args: None
-    log = logging.getLogger("werkzeug")
-    log.setLevel(logging.ERROR)
+    logger = logging.getLogger("werkzeug")
+    logger.setLevel(logging.ERROR)
 
     @app.route("/", methods=["GET"])
     def render_table():
         return dataframe.to_html(classes="data", header=True)
 
+    @app.route("/json", methods=["GET"])
+    def rend_json():
+        return app.response_class(
+            response=dataframe.to_json(),
+            status=200,
+            mimetype="application/json",
+        )
+
+    domain = f"http://{host}:{port}"
     print(
-        f"\N{satellite antenna} {Fore.LIGHTGREEN_EX}Data streaming server started: http://localhost:1010/"
+        f"\N{satellite antenna} {Fore.LIGHTGREEN_EX}Data streaming server started, endpoints:"
+        f"\n\t{Fore.LIGHTCYAN_EX}{domain}/\n\t{domain}/json"
+        f"\n{Fore.LIGHTYELLOW_EX}(Press Ctrl+C to stop)"
     )
-    app.run(host="localhost", port=1010, debug=False, use_reloader=False)
+    app.run(host, port, debug=False, use_reloader=False)
 
 
 def main():
