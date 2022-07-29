@@ -7,11 +7,9 @@ LoA: League of Archive is a CLI tool to scape League of Legends champions analyz
 ## Video Demo
 
 <div style="text-align: center">
-<a href="https://www.youtube.com/watch?v=lDFCNSey9RI">
+<a href="https://www.youtube.com/watch?v=">
     <img src="https://img.shields.io/badge/YOUTUBE-WATCH%20NOW-red?logo=YOUTUBE&logoColor=red&style=for-the-badge" />
 </a>
-
-<!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/lDFCNSey9RI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
 </div>
 
 ## Requirements
@@ -22,7 +20,7 @@ LoA: League of Archive is a CLI tool to scape League of Legends champions analyz
 ## Usage
 
 ```shell
-$ python3 project.py --help
+python3 project.py --help
 ```
 
 ```
@@ -30,14 +28,14 @@ usage: project.py [-h] [-t TYPE] [--plot | --no-plot] [-v] provider
 
 LoA: League of Archive - Scrape, export and visualize data from OP.GG and Blitz.GG
 
-positional arguments:
-  provider              data provider to use, options: {op.gg, blitz.gg}
+Positional arguments:
+  provider              Data provider to use, options: {op.gg, blitz.gg}
 
-options:
-  -h, --help            show this help message and exit
-  -t TYPE, --type TYPE  data exporting type, options: {xlsx, csv, json, txt}, default: xlsx
-  --plot, --no-plot     visualize the data and export it as png
-  -v, --version         show program's version number and exit
+Optional arguments:
+  -h, --help            Show this help message and exit
+  -t TYPE, --type TYPE  Data exporting type, options: {xlsx, csv, json, txt}
+  --plot, --no-plot     Visualize the data and export it as png
+  -v, --version         Show program's version number and exit
 
 Results will be exported under ./results
 ```
@@ -46,7 +44,7 @@ Results will be exported under ./results
 
 1. Data gathering preferences:
 
-   - Game patch (version): 12.13
+   - Game patch (version): 12.14
    - Game mode: Ranked Solo/Duo
    - Champion roles: <img src="./assets/lanes/all.png" alt="all" width="15" height="15"/> All (<img src="./assets/lanes/top.png" alt="Top" width="15" height="15"/> Top, <img src="./assets/lanes/jng.png" alt="Jungle" width="15" height="15"/> Jungle, <img src="./assets/lanes/mid.png" alt="Mid" width="15" height="15"/> Mid, <img src="./assets/lanes/bot.png" alt="Bottom" width="15" height="15"/> Bot (ADC), <img src="./assets/lanes/sup.png" alt="Support" width="15" height="15"/> Support)
    - Players rank: <img src="./assets/ranks/platinum.png" alt="Platinum" width="15" height="15"/> Platinum and above (<img src="./assets/ranks/diamond.png" alt="Diamond" width="15" height="15"/> Diamond, <img src="./assets/ranks/master.png" alt="Master" width="15" height="15"/> Master, <img src="./assets/ranks/grandmaster.png" alt="Grandmaster" width="15" height="15"/> Grandmaster, <img src="./assets/ranks/challenger.png" alt="Challenger" width="15" height="15"/> Challenger)
@@ -61,7 +59,7 @@ Results will be exported under ./results
 
 3. Dataframe structuring:
 
-   - Unique value for each champion (161 champion as for patch 12.13)
+   - Unique value for each champion (161 champion as for patch 12.14)
    - The most played role for a champion will be selected if multiple roles are listed.
    - Champions with "not enough sample size" mark (The provider did not find enough matches to analyze) will automatically have 0 row values.
    - Columns are:
@@ -94,7 +92,7 @@ Results will be exported under ./results
 
   - Champions list:
 
-    - [Data Dragon 12.13.1 CDN](https://ddragon.leagueoflegends.com/cdn/12.13.1/data/en_US/champion.json "Data Dragon - champion")
+    - [Data Dragon 12.14.1 CDN](https://ddragon.leagueoflegends.com/cdn/12.14.1/data/en_US/champion.json "Data Dragon - champion")
 
   - Champions winrates:
 

@@ -29,7 +29,7 @@ def get_args(args=None) -> argparse.Namespace:
     type_arg = parser.add_argument(
         "-t",
         "--type",
-        help=f"{Fore.LIGHTBLUE_EX}Data exporting type, options: {{xlsx, csv, json, txt}}, default: xlsx{Fore.RESET}",
+        help=f"{Fore.LIGHTBLUE_EX}Data exporting type, options: {{xlsx, csv, json, txt}}{Fore.RESET}",
         type=str.lower,
         # choices=["xlsx", "csv", "json", "txt"], # removed due to uglifying the -h output
     )
@@ -51,7 +51,7 @@ def get_args(args=None) -> argparse.Namespace:
 
     args = parser.parse_args(args)
 
-    if args.provider not in ["op.gg", "blitz.gg"]:
+    if args.provider not in ("op.gg", "blitz.gg"):
         raise argparse.ArgumentError(
             provider_arg,
             f'Invalid provider: "{args.provider}", options: {{op.gg, blitz.gg}}',
@@ -64,7 +64,7 @@ def get_args(args=None) -> argparse.Namespace:
                 + f"\nor visit the repository: {__repo_url__}"
             )
         )
-    if args.type is not None and args.type not in ["xlsx", "csv", "json", "txt"]:
+    if args.type is not None and args.type not in ("xlsx", "csv", "json", "txt"):
         raise argparse.ArgumentError(
             type_arg,
             f'Invalid type: "{args.type}", options: {{xlsx, csv, json, txt}}',
@@ -135,10 +135,12 @@ def main():
 
     path = f"results/{args.provider}"
 
-    if args.type and not os.path.exists(f"{path}/data"):
-        os.makedirs(f"{path}/data")
-    if args.plot and not os.path.exists(f"{path}/plots"):
-        os.makedirs(f"{path}/plots")
+    for arg, wanted_path in (
+        (args.type, f"{path}/data"),
+        (args.plot, f"{path}/plots"),
+    ):
+        if arg and not os.path.exists(wanted_path):
+            os.makedirs(wanted_path)
 
     if args.type:
         export_path = export_to(data, date_time, args.type, path)
