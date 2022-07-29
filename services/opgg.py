@@ -15,7 +15,7 @@ class OPGG(BaseAPIService):
             "position": "",
         }
 
-        response: requests.models.Response = self.session.get(
+        response: requests.Response = self.session.get(
             Providers.fetch_links[Providers.OP_GG],
             headers=self.headers,
             params=self.params,

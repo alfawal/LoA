@@ -10,7 +10,7 @@ class Blitz(BaseAPIService):
     def _api_call(self) -> dict:
         self.params = "query=query%20TierList%28%24region%3ARegion%2C%24queue%3AQueue%2C%24tier%3ATier%29%7BallChampionStats%28region%3A%24region%2Cqueue%3A%24queue%2Ctier%3A%24tier%2CmostPopular%3Atrue%29%7BchampionId%20role%20patch%20wins%20games%20tierListTier%7BtierRank%20previousTierRank%20status%7D%7D%7D&variables=%7B%22queue%22%3A%22RANKED_SOLO_5X5%22%2C%22region%22%3A%22WORLD%22%2C%22tier%22%3A%22PLATINUM_PLUS%22%7D"
 
-        response: requests.models.Response = self.session.get(
+        response: requests.Response = self.session.get(
             Providers.fetch_links[Providers.BLITZ_GG],
             headers=self.headers,
             params=self.params,
