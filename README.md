@@ -6,9 +6,11 @@ LoA: League of Archives is a CLI tool to scape analyzed League of Legends champi
 
 ## Video Demo
 
-<a href="https://www.youtube.com/watch?v=">
+<a href="https://www.youtube.com/watch?v=KswQcRJMw8A">
     <img src="https://img.shields.io/badge/YOUTUBE-WATCH%20NOW-red?logo=YOUTUBE&logoColor=red&style=for-the-badge" />
 </a>
+
+### Link: https://www.youtube.com/watch?v=KswQcRJMw8A
 
 ## Requirements
 
