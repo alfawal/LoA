@@ -31,5 +31,5 @@ requests==2.31.0
 six==1.16.0
 tomli==2.0.1
 UliPlot==0.2.2
-urllib3==1.26.11
+urllib3==1.26.18
 Werkzeug==2.2.3
